@@ -34,26 +34,12 @@ def mkdir_p(path):
     else:
       raise
 
-def run(cmd):
+def run(cmd, silent = True):
   """ Run a command-array """
   process = subprocess.Popen(cmd, stdout=subprocess.PIPE)
-  for line in process.stdout:
-    print(line)
-
-def dmg2img(dmg, img):
-  """ Extract a DMG to an IMG file """
-  plat = platform.system()
-  loc = os.path.dirname(os.path.realpath(__file__))
-  if plat == 'Darwin':
-    cmd = '%s/dmg2img-osx.sh' % (loc)
-  elif plat == 'Linux':
-    cmd = '%s/dmg2img-linux' % (loc)
-  elif plat == 'Windows':
-    cmd = '%s/dmg2img-windows.exe' % (loc)
-  else:
-    print 'No dmg2img available for your platform. Convert %s to %s on your own.' % (dmg, img)
-    sys.exit(1)
-  run([cmd, dmg, img])
+  if not silent:
+    for line in process.stdout:
+      print(line)
 
 def progress(current, total, title='', size=50, on='#', off=' '):
   """ Show a progress-bar """
@@ -137,7 +123,7 @@ def getInstaller(osx='10.15.1', out = None):
         sys.exit(1)
   if not os.path.exists(imgPath):
     print 'Extracting installer DMG to IMG.'
-    dmg2img(dmgPath, imgPath)
+    run(['%s/dmg2img' % (os.path.dirname(os.path.realpath(__file__))), dmgPath, imgPath])
 
 
 if __name__== "__main__":

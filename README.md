@@ -2,7 +2,7 @@
 
 This will help you setup a mac KVM very quickly.
 
-To use it, you will need python & qemu installed.
+To use it, you will need python & qemu installed, and kvm only works on Linux.
 
 ```bash
 # download image, and start qemu VM to setup OSX
