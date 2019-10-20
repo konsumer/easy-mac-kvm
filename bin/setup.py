@@ -42,7 +42,7 @@ if not os.path.exists(DISK_ESP):
 run([
   'qemu-system-x86_64',
   '-enable-kvm',
-  '-m', MEMORY, 
+  '-m', SIZE_MEMORY, 
   '-machine', 'q35,accel=kvm',
   '-smp', '4,cores=2', 
   '-cpu', 'Penryn,vendor=GenuineIntel,kvm=on,+sse3,+sse4.2,+aes,+xsave,+avx,+xsaveopt,+xsavec,+xgetbv1,+avx2,+bmi2,+smep,+bmi1,+fma,+movbe,+invtsc',

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-""" Download files and run setup VM """
+""" Run your VM """
 
 from fetch import *
 import os
@@ -18,12 +18,11 @@ OVM_VARS='%s/OVMF_VARS-1024x768.fd' % DIR_OVM
 # openssl rand -hex 6 | sed 's/\(..\)/\1:/g; s/.$//'
 MAC_ADDRESS='a0:9f:de:46:89:2b'
 SIZE_MEMORY='2G'
-SIZE_SYSTEM='64G'
 
 run([
   'qemu-system-x86_64',
   '-enable-kvm',
-  '-m', MEMORY, 
+  '-m', SIZE_MEMORY, 
   '-machine', 'q35,accel=kvm',
   '-smp', '4,cores=2', 
   '-cpu', 'Penryn,vendor=GenuineIntel,kvm=on,+sse3,+sse4.2,+aes,+xsave,+avx,+xsaveopt,+xsavec,+xgetbv1,+avx2,+bmi2,+smep,+bmi1,+fma,+movbe,+invtsc',
