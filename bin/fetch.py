@@ -46,7 +46,7 @@ def progress(current, total, title='', size=50, on='#', off=' '):
   change = (float(current) / float(total))
   delta = int(change * size) + 1
   percent = change * 100.0
-  print "\r%s%02d%% [%s%s]" % (title, percent, on * delta, off * (size - delta)),
+  print "\r%s% 2d%% [%s%s]" % (title, percent, on * delta, off * (size - delta)),
   sys.stdout.flush()
 
 
@@ -121,10 +121,10 @@ def getInstaller(osx='10.15.1', out = None):
         for p in products:
           print '  %s (product: %s, build: %s)' % (products[p]['version'], p, products[p]['build'])
         sys.exit(1)
-  if not os.path.exists(imgPath):
-    print 'Extracting installer DMG to IMG.'
+    print '\nExtracting installer.'
     run(['%s/dmg2img' % (os.path.dirname(os.path.realpath(__file__))), dmgPath, imgPath])
-    os.remove("%s.dmg" % (dmgPath))
+    print dmgPath
+    # os.remove(dmgPath)
 
 
 if __name__== "__main__":

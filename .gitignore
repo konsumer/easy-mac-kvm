@@ -1,6 +1,4 @@
 .DS_Store
-*.dmg
-*.img
-*.fd
-*.qcow2
 *.pyc
+disks/
+firmware/

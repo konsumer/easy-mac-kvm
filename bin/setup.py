@@ -24,19 +24,29 @@ SIZE_SYSTEM='64G'
 mkdir_p(DIR_DISKS)
 mkdir_p(DIR_OVM)
 
+# get installer IMG
 getInstaller(VERSION, DISK_INSTALLER)
 
+# clan up DMG file
+DISK_DMG = '%s.dmg' % os.path.splitext(DISK_INSTALLER)[0]
+if os.path.exists(DISK_DMG):
+  os.remove(DISK_DMG)
+
+# create system disk
 if not os.path.exists(DISK_SYSTEM):
   run(['qemu-img', 'create', '-f', 'qcow2', DISK_SYSTEM, SIZE_SYSTEM])
 
 if not os.path.exists(OVM_CODE):
-  download('https://github.com/kholia/OSX-KVM/raw/master/OVMF_CODE.fd', OVM_CODE, 'Downloading Firmware (code)')
+  print ''
+  download('https://github.com/kholia/OSX-KVM/raw/master/OVMF_CODE.fd', OVM_CODE, 'Downloading Firmware (code) ')
 
 if not os.path.exists(OVM_VARS):
-  download('https://github.com/kholia/OSX-KVM/raw/master/OVMF_VARS-1024x768.fd', OVM_VARS, 'Downloading Firmware (vars)')
+  print ''
+  download('https://github.com/kholia/OSX-KVM/raw/master/OVMF_VARS-1024x768.fd', OVM_VARS, 'Downloading Firmware (vars) ')
 
 if not os.path.exists(DISK_ESP):
-  download('https://github.com/kholia/OSX-KVM/raw/master/Catalina/CloverNG.qcow2', DISK_ESP, 'Downloading boot-image')
+  print ''
+  download('https://github.com/kholia/OSX-KVM/raw/master/Catalina/CloverNG.qcow2', DISK_ESP, 'Downloading boot-image ')
 
 
 run([
