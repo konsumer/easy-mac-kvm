@@ -7,10 +7,6 @@ __copyright__ = "Copyright 2019, David Konsumer"
 __license__ = "GPLv3"
 __version__ = "1.0"
 
-# ideas from
-# https://github.com/kholia/OSX-KVM/blob/master/fetch-macOS.py
-# https://github.com/foxlet/macOS-Simple-KVM/blob/master/tools/FetchMacOS/fetch-macos.py
-
 # no deps!
 import argparse
 import errno

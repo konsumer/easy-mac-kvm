@@ -18,7 +18,8 @@ OVM_VARS='%s/OVMF_VARS-1024x768.fd' % DIR_OVM
 
 # openssl rand -hex 6 | sed 's/\(..\)/\1:/g; s/.$//'
 MAC_ADDRESS='a0:9f:de:46:89:2b'
-MEMORY='2G'
+SIZE_MEMORY='2G'
+SIZE_SYSTEM='64G'
 
 mkdir_p(DIR_DISKS)
 mkdir_p(DIR_OVM)
@@ -26,7 +27,7 @@ mkdir_p(DIR_OVM)
 getInstaller(VERSION, DISK_INSTALLER)
 
 if not os.path.exists(DISK_SYSTEM):
-  run(['qemu-img', 'create', '-f', 'qcow2', DISK_SYSTEM, '64G'])
+  run(['qemu-img', 'create', '-f', 'qcow2', DISK_SYSTEM, SIZE_SYSTEM])
 
 if not os.path.exists(OVM_CODE):
   download('https://github.com/kholia/OSX-KVM/raw/master/OVMF_CODE.fd', OVM_CODE)
@@ -35,7 +36,7 @@ if not os.path.exists(OVM_VARS):
   download('https://github.com/kholia/OSX-KVM/raw/master/OVMF_VARS-1024x768.fd', OVM_VARS)
 
 if not os.path.exists(DISK_ESP):
-  download('https://github.com/foxlet/macOS-Simple-KVM/raw/master/ESP.qcow2', DISK_ESP)
+  download('https://github.com/kholia/OSX-KVM/raw/master/Catalina/CloverNG.qcow2', DISK_ESP)
 
 
 run([
