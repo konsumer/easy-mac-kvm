@@ -6,7 +6,7 @@ from fetch import *
 import os
 import sys
 
-VERSION='10.15.1'
+VERSION='10.15'
 DIR_DISKS=os.path.realpath('./disks')
 DIR_OVM=os.path.realpath('./firmware')
 
@@ -26,11 +26,6 @@ mkdir_p(DIR_OVM)
 
 # get installer IMG
 getInstaller(VERSION, DISK_INSTALLER)
-
-# clan up DMG file
-DISK_DMG = '%s.dmg' % os.path.splitext(DISK_INSTALLER)[0]
-if os.path.exists(DISK_DMG):
-  os.remove(DISK_DMG)
 
 # create system disk
 if not os.path.exists(DISK_SYSTEM):
