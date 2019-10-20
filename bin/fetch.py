@@ -50,7 +50,7 @@ def progress(current, total, title='', size=50, on='#', off=' '):
   sys.stdout.flush()
 
 
-def download(url, file, size=None, title=''):
+def download(url, file, title='', size=None):
   """ Download a large binary file, with progress """
   response = urlopen(url)
   if size is None:
@@ -113,7 +113,7 @@ def getInstaller(osx='10.15.1', out = None):
       for p in products:
         product = products[p]
         if product['version'] == osx:
-          download(product['url'], dmgPath, product['size'], title='Downloading %s (product: %s, build: %s) ' % (osx, p, product['build']))
+          download(product['url'], dmgPath, 'Downloading %s (product: %s, build: %s) ' % (osx, p, product['build']), product['size'])
           break
       if not product:
         parser.print_help()
@@ -124,6 +124,7 @@ def getInstaller(osx='10.15.1', out = None):
   if not os.path.exists(imgPath):
     print 'Extracting installer DMG to IMG.'
     run(['%s/dmg2img' % (os.path.dirname(os.path.realpath(__file__))), dmgPath, imgPath])
+    os.remove("%s.dmg" % (dmgPath))
 
 
 if __name__== "__main__":
