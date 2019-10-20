@@ -100,7 +100,7 @@ def getInstaller(osx='10.15.1', out = None):
     out = './installer-%s.img' % (osx) 
   imgPath = os.path.realpath(out)
   imgDir = os.path.dirname(imgPath)
-  dmgPath = "%s.dmg" % (os.path.splitext(imgPath)[0])
+  dmgPath = '%s.dmg' % (os.path.splitext(imgPath)[0])
   if os.path.exists(imgPath):
     print '%s exists. Skipping.' % (imgPath)
   else:
@@ -123,8 +123,6 @@ def getInstaller(osx='10.15.1', out = None):
         sys.exit(1)
     print '\nExtracting installer.'
     run(['%s/dmg2img' % (os.path.dirname(os.path.realpath(__file__))), dmgPath, imgPath])
-    print dmgPath
-    # os.remove(dmgPath)
 
 
 if __name__== "__main__":
