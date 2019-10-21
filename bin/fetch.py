@@ -46,7 +46,7 @@ def progress(current, total, title='', size=50, on='#', off=' '):
   change = (float(current) / float(total))
   delta = int(change * size) + 1
   percent = change * 100.0
-  print "\r%s% 2d%% [%s%s]" % (title, percent, on * delta, off * (size - delta)),
+  print('\r%s% 2d%% [%s%s]' % (title, percent, on * delta, off * (size - delta))),
   sys.stdout.flush()
 
 
@@ -102,12 +102,12 @@ def getInstaller(osx='10.15', out = None):
   imgDir = os.path.dirname(imgPath)
   dmgPath = '%s.dmg' % (os.path.splitext(imgPath)[0])
   if os.path.exists(imgPath):
-    print '%s exists. Skipping.' % (imgPath)
+    print('%s exists. Skipping.' % (imgPath))
   else:
     if os.path.exists(dmgPath):
-      print '%s exists. Skipping.' % (dmgPath)
+      print('%s exists. Skipping.' % (dmgPath))
     else:
-      print "Getting info from Apple's catalog."
+      print("Getting info from Apple's catalog.")
       products = getProducts()
       product = None
       for p in products:
@@ -117,11 +117,11 @@ def getInstaller(osx='10.15', out = None):
           break
       if not product:
         parser.print_help()
-        print "\n%s wasn't found in Apple's Catalog.\n\nAvailable versions:" % (args['osx'])
+        print("\n%s wasn't found in Apple's Catalog.\n\nAvailable versions:" % (args['osx']))
         for p in products:
-          print '  %s (product: %s, build: %s)' % (products[p]['version'], p, products[p]['build'])
+          print('  %s (product: %s, build: %s)' % (products[p]['version'], p, products[p]['build']))
         sys.exit(1)
-    print '\nExtracting installer.'
+    print('\nExtracting installer.')
     run(['%s/dmg2img' % (os.path.dirname(os.path.realpath(__file__))), dmgPath, imgPath])
 
 
