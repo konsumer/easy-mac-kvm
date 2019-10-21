@@ -155,7 +155,7 @@ I wanted to be able to swap input with keyboard/mouse, directly (rather than int
 
 #### libvirt
 
-[libvirt](https://libvirt.org/) is a high-level wrapper around other virtualization tech, like qemu, as we are using here. It has a nice GUI called [virt-manager](https://virt-manager.org/). It seems to screw up advanced stuff like qemu params for optimizing CPU and sound, so I stopped using it personally, but I included it anyway, in case you ant to use it. `virsh edit MACHINE` is totally safe, but I daw little reason to use it once my qemu script was dialed in. Before you run it, tweak the script to your taste (should closely match [`run.py`](bin/run.py).)
+[libvirt](https://libvirt.org/) is a high-level wrapper around other virtualization tech, like qemu, as we are using here. It has a nice GUI called [virt-manager](https://virt-manager.org/). It seems to screw up advanced stuff like qemu params for optimizing CPU and sound, so I stopped using it personally, but I included it anyway, in case you want to use it. `virsh edit MACHINE` is totally safe, but I saw little reason to use it, once my qemu script was dialed in. Before you run it, tweak the script to your taste (should closely match [`run.py`](bin/run.py).)
 
 ```bash
 ./bin/virt.py
