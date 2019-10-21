@@ -12,23 +12,21 @@ import argparse
 import errno
 import os
 import platform
-import plistlib
 import re
 import subprocess
 import sys
 import time
+
 try:
   from urllib.request import urlopen # Python 3
 except ImportError:
   from urllib2 import urlopen # Python 2
 
-def readplist(string):
-  try:
-    return plistlib.readPlistFromString(string)
-  except AttributeError:
-    return plistlib.loads(string)
-  except:
-    raise
+try:
+  from plistlib import loads as  readplist # Python 3
+except ImportError:
+  from plistlib import readPlistFromString as readplist # Python 2
+
 
 suCatalogUrl = 'https://swscan.apple.com/content/catalogs/others/index-10.15seed-10.15-10.14-10.13-10.12-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1.sucatalog'
 
