@@ -151,7 +151,7 @@ run([
 
 #### evdev
 
-I wanted to be able to swap input with keyboard/mouse, directly (rather than interact with the vmachine through the qemu graphic window) so I use evdev. I followed the advice [here](https://passthroughpo.st/using-evdev-passthrough-seamless-vm-input/) to set it up. It take a few steps, and might not be worth it if you have a KVM switch like [this](https://www.amazon.com/gp/product/B07QM6ND7R/).
+I wanted to be able to swap input with keyboard/mouse, directly (rather than interact with the vmachine through the qemu graphic window) so I use evdev. I followed the advice [here](https://passthroughpo.st/using-evdev-passthrough-seamless-vm-input/) to set it up. It takes a few steps, and might not be worth it if you have a KVM switch like [this](https://www.amazon.com/gp/product/B07QM6ND7R/) laying around.
 
 #### libvirt
 
