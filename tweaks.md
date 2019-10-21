@@ -72,7 +72,26 @@ I have a Geforce GTX 1060, so I'll be passing through my card & it's HDMI audio 
 
 #### vfio
 
-The vfio-pci module is not included in the kernel on all systems, you may need for load it as part of initramfs. Look up your distro's documentation on how to do this.
+The vfio-pci module is not included in the kernel on all systems, you may need for load it as part of initramfs. Look up your distro's documentation on how to do this. FOr my system, I added this to `/etc/modules`:
+
+```
+vfio-pci 
+vfio_iommu_type1
+```
+
+I also had to blacklist my nvidia stuff in `/etc/modprobe.d/blacklist-nouveau.conf`:
+
+```
+blacklist nouveau
+options nouveau modeset=0
+blacklist snd_hda_intel
+```
+
+Then update my initial-ramdisk:
+
+```
+sudo update-initramfs -u
+```
 
 #### kernel flags
 
@@ -88,7 +107,7 @@ iommu=pt amd_iommu=on vfio-pci.ids=10de:1c03,10de:10f1
 iommu=pt intel_iommu=on vfio-pci.ids=10de:1c03,10de:10f1
 ```
 
-Since I am on intel & [Pop!OS](https://system76.com/pop), I used `kernelstub -a "iommu=pt intel_iommu=on vfio-pci.ids=10de:1c03,10de:10f1"`
+Since I am on intel & [Pop!OS](https://system76.com/pop), I used `kernelstub -a "iommu=pt intel_iommu=on vfio-pci.ids=10de:1c03,10de:10f1"`.
 
 #### attach card to QEMU
 
