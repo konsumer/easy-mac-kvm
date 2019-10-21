@@ -4,6 +4,8 @@ This will help you setup a mac KVM very quickly & easily. If you generate your b
 
 To use it, you will need python & qemu installed, and kvm only works on a Linux host. You will also need harware-virtualization on your processor.
 
+If you want to see the current setup I am using, you can checkout the [mysetup branch](https://github.com/konsumer/easy-mac-kvm/tree/mysetup). It's very hardware-specific, though, so YMMV.
+
 ```bash
 # get the files
 git clone --depth=1 https://github.com/konsumer/easy-mac-kvm.git mymac
