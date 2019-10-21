@@ -89,7 +89,7 @@ This will output, for example:
 
 I have a Geforce GTX 1060, so I'll be passing through my card & it's HDMI audio interface:
 
-``
+```
 01:00.0 VGA compatible controller [0300]: NVIDIA Corporation GP106 [GeForce GTX 1060 6GB] [10de:1c03] (rev a1)
 01:00.1 Audio device [0403]: NVIDIA Corporation GP106 High Definition Audio Controller [10de:10f1] (rev a1)`
 ```
