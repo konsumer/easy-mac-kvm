@@ -94,7 +94,7 @@ def getProducts():
         continue
   return installer_products
 
-def getInstaller(osx='10.15.1', out = None):
+def getInstaller(osx='10.15', out = None):
   """ main entry-point gets an IMG file for a version of OSX """
   if out is None:
     out = './installer-%s.img' % (osx) 
@@ -127,7 +127,7 @@ def getInstaller(osx='10.15.1', out = None):
 
 if __name__== "__main__":
   parser = argparse.ArgumentParser(description="Fetch macOS products from Apple's SoftwareUpdate service, and save installer img file.")
-  parser.add_argument('--osx', help='The version of OSX to download. Defaults to 10.15.1.', default='10.15.1')
+  parser.add_argument('--osx', help='The version of OSX to download. Defaults to 10.15.', default='10.15')
   parser.add_argument('out', help='The output path to use.', metavar='PATH')
   a = parser.parse_args()
   getInstaller(a.osx, a.out)
