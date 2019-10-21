@@ -3,17 +3,15 @@
 """ Run your VM """
 
 from fetch import *
-import os
-import sys
 
-VERSION='10.15.1'
+VERSION='10.15'
 DIR_DISKS=os.path.realpath('./disks')
 DIR_OVM=os.path.realpath('./firmware')
 
 DISK_SYSTEM='%s/System-%s.qcow2' % (DIR_DISKS, VERSION)
 DISK_ESP='%s/ESP.qcow2' % DIR_DISKS
 OVM_CODE='%s/OVMF_CODE.fd' % DIR_OVM
-OVM_VARS='%s/OVMF_VARS-1024x768.fd' % DIR_OVM
+OVM_VARS='%s/OVMF_VARS.fd' % DIR_OVM
 
 # openssl rand -hex 6 | sed 's/\(..\)/\1:/g; s/.$//'
 MAC_ADDRESS='a0:9f:de:46:89:2b'
@@ -22,9 +20,9 @@ SIZE_MEMORY='2G'
 run([
   'qemu-system-x86_64',
   '-enable-kvm',
-  '-m', SIZE_MEMORY, 
+  '-m', SIZE_MEMORY,
   '-machine', 'q35,accel=kvm',
-  '-smp', '4,cores=2', 
+  '-smp', '4,cores=2',
   '-cpu', 'Penryn,vendor=GenuineIntel,kvm=on,+sse3,+sse4.2,+aes,+xsave,+avx,+xsaveopt,+xsavec,+xgetbv1,+avx2,+bmi2,+smep,+bmi1,+fma,+movbe,+invtsc',
   '-device', 'isa-applesmc,osk=ourhardworkbythesewordsguardedpleasedontsteal(c)AppleComputerInc',
   '-smbios', 'type=2',
