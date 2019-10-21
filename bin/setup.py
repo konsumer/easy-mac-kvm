@@ -31,15 +31,15 @@ if not os.path.exists(DISK_SYSTEM):
   run(['qemu-img', 'create', '-f', 'qcow2', DISK_SYSTEM, SIZE_SYSTEM])
 
 if not os.path.exists(OVM_CODE):
-  print ''
+  print('')
   download('https://github.com/kholia/OSX-KVM/raw/master/OVMF_CODE.fd', OVM_CODE, 'Downloading Firmware (code) ')
 
 if not os.path.exists(OVM_VARS):
-  print ''
+  print ('')
   download('https://github.com/kholia/OSX-KVM/raw/master/OVMF_VARS-1024x768.fd', OVM_VARS, 'Downloading Firmware (vars) ')
 
 if not os.path.exists(DISK_ESP):
-  print ''
+  print ('')
   download('https://github.com/kholia/OSX-KVM/raw/master/Catalina/CloverNG.qcow2', DISK_ESP, 'Downloading boot-image ')
 
 

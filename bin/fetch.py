@@ -22,6 +22,14 @@ try:
 except ImportError:
   from urllib2 import urlopen # Python 2
 
+def readplist(string):
+  try:
+    return plistlib.readPlistFromString(string)
+  except AttributeError:
+    return plistlib.loads(string)
+  except:
+    raise
+
 suCatalogUrl = 'https://swscan.apple.com/content/catalogs/others/index-10.15seed-10.15-10.14-10.13-10.12-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1.sucatalog'
 
 def mkdir_p(path):
@@ -46,7 +54,7 @@ def progress(current, total, title='', size=50, on='#', off=' '):
   change = (float(current) / float(total))
   delta = int(change * size) + 1
   percent = change * 100.0
-  print('\r%s% 2d%% [%s%s]' % (title, percent, on * delta, off * (size - delta))),
+  sys.stdout.write('\r%s% 2d%% [%s%s]' % (title, percent, on * delta, off * (size - delta)))
   sys.stdout.flush()
 
 
@@ -73,7 +81,7 @@ def get(url):
 
 def getProducts():
   """ get a list of releases from Apple """
-  catalog = plistlib.readPlistFromString(get(url=suCatalogUrl))
+  catalog = readplist(get(url=suCatalogUrl))
   installer_products = {}
   if 'Products' in catalog:
     for product_key in list(catalog['Products'].keys()):
@@ -81,7 +89,7 @@ def getProducts():
       try:
         if product['ExtendedMetaInfo']['InstallAssistantPackageIdentifiers']['OSInstall'] == 'com.apple.mpkg.OSInstall':
           product = catalog['Products'][product_key]
-          dist = plistlib.readPlistFromString(get(url=product['Distributions'].get('English')))
+          dist = readplist(get(url=product['Distributions'].get('English')))
           packages = [ p for p in product['Packages'] if p['URL'].endswith('BaseSystem.dmg') ]
           installer_products[product_key] = {
             'date': product['PostDate'],
