@@ -44,70 +44,93 @@ Find the part in [`run.py`](bin/run.py) that says `4,cores=2`, and change it to 
 
 ### PCI passthrough
 
-PCI passthrough let's your virtual-machines use video-hardware, directly. You will need an "extra" video card that gets passed through, in addition to your every day videocard. I use my onboard Intel video for day-to-day stuff, and passthrough an Nvidia Geforce GTX 1060. Your processor will also need to have IOMMU (VT-d on Intel, or newish AMD CPU.)
+PCI passthrough lets your virtual-machines use video-hardware, directly. You will need an "extra" video card that gets passed through, in addition to your every day videocard. I use my onboard Intel video for day-to-day stuff, and passthrough an Nvidia Geforce GTX 1060. Your processor will also need to have IOMMU (VT-d on Intel, or newish AMD CPU.)
 
-On my system, I have a seperate cable going from my monitor to the secondary card, and I switch inputs on the monitor to see whats on the screen. It might make life easier to get a KVM switch like [this](https://www.amazon.com/gp/product/B07QM6ND7R/), so you can just swtich USB inputs & monitor all at once.
+On my system, I have a seperate cable going from my monitor to the secondary card, and I switch inputs (via switch) on the monitor to see whats on the screen. It might make life easier to get a KVM switch like [this](https://www.amazon.com/gp/product/B07QM6ND7R/), so you can just swtich USB inputs & monitor all at once.
 
-#### get info
+I am using [Pop!OS 19.10](https://system76.com/pop), so your system may (probably will) be different.
+
+First, I added kernel-params:
+
+```
+sudo kernelstub -a "intel_iommu=on efifb=off"
+```
+
+Use this to get a list of devices:
 
 ```bash
-lspci -nn | grep "VGA\|Audio"
+lspci -vnn
 ```
 
-This will output, for example:
+The relevant parts of my setup are here:
 
 ```
-00:02.0 VGA compatible controller [0300]: Intel Corporation UHD Graphics 630 (Desktop) [8086:3e92]
-00:1f.3 Audio device [0403]: Intel Corporation Cannon Lake PCH cAVS [8086:a348] (rev 10)
-01:00.0 VGA compatible controller [0300]: NVIDIA Corporation GP106 [GeForce GTX 1060 6GB] [10de:1c03] (rev a1)
+01:00.0 VGA compatible controller [0300]: NVIDIA Corporation GP106 [GeForce GTX 1060 6GB] [10de:1c03] (rev a1) (prog-if 00 [VGA controller])
+	Subsystem: eVga.com. Corp. GP106 [GeForce GTX 1060 6GB] [3842:6163]
+	Flags: fast devsel, IRQ 11
+	Memory at a2000000 (32-bit, non-prefetchable) [disabled] [size=16M]
+	Memory at 90000000 (64-bit, prefetchable) [disabled] [size=256M]
+	Memory at a0000000 (64-bit, prefetchable) [disabled] [size=32M]
+	I/O ports at 3000 [disabled] [size=128]
+	Expansion ROM at a3000000 [disabled] [size=512K]
+	Kernel modules: nvidiafb, nouveau
+
 01:00.1 Audio device [0403]: NVIDIA Corporation GP106 High Definition Audio Controller [10de:10f1] (rev a1)
+	Subsystem: eVga.com. Corp. GP106 High Definition Audio Controller [3842:6163]
+	Flags: bus master, fast devsel, latency 0, IRQ 10
+	Memory at a3080000 (32-bit, non-prefetchable) [size=16K]
+	Kernel modules: snd_hda_intel
 ```
 
-I have a Geforce GTX 1060, so I'll be passing through my card & it's HDMI audio interface:
+So I will use `01:00.0` & `01:00.1` (prefixed with `0000:`):
 
-```
-01:00.0 VGA compatible controller [0300]: NVIDIA Corporation GP106 [GeForce GTX 1060 6GB] [10de:1c03] (rev a1)
-01:00.1 Audio device [0403]: NVIDIA Corporation GP106 High Definition Audio Controller [10de:10f1] (rev a1)`
-```
+```bash
+sudo -s
+echo '#!/bin/sh
+PREREQS=""
+DEVS="0000:01:00.0 0000:01:00.1"
+for DEV in $DEVS;
+  do echo "vfio-pci" > /sys/bus/pci/devices/$DEV/driver_override
+done
+modprobe -i vfio-pci' > /etc/initramfs-tools/scripts/init-top/bind_vfio.sh
 
-#### vfio
-
-The vfio-pci module is not included in the kernel on all systems, you may need for load it as part of initramfs. Look up your distro's documentation on how to do this. FOr my system, I added this to `/etc/modules`:
-
-```
-vfio-pci 
-vfio_iommu_type1
-```
-
-I also had to blacklist my nvidia stuff in `/etc/modprobe.d/blacklist-nouveau.conf`:
-
-```
-blacklist nouveau
-options nouveau modeset=0
-blacklist snd_hda_intel
+chmod 755 /etc/initramfs-tools/scripts/init-top/bind_vfio.sh
+echo 'vfio-pci' >> /etc/initramfs-tools/modules
+update-initramfs -u
 ```
 
-Then update my initial-ramdisk:
+At this point, reboot for the changes to take effect.
 
-```
-sudo update-initramfs -u
-```
+Check to make sure it worked:
 
-#### kernel flags
-
-You need to add some passthrough stuff to your kernel-flags (probably with grub.) Here are some examples using above PCI devices.
-
-**AMD**
-```
-iommu=pt amd_iommu=on vfio-pci.ids=10de:1c03,10de:10f1
+```bash
+lspci -vnn
 ```
 
-**Intel**
 ```
-iommu=pt intel_iommu=on vfio-pci.ids=10de:1c03,10de:10f1
+01:00.0 VGA compatible controller [0300]: NVIDIA Corporation GP106 [GeForce GTX 1060 6GB] [10de:1c03] (rev a1) (prog-if 00 [VGA controller])
+	Subsystem: eVga.com. Corp. GP106 [GeForce GTX 1060 6GB] [3842:6163]
+	Flags: fast devsel, IRQ 11
+	Memory at a2000000 (32-bit, non-prefetchable) [disabled] [size=16M]
+	Memory at 90000000 (64-bit, prefetchable) [disabled] [size=256M]
+	Memory at a0000000 (64-bit, prefetchable) [disabled] [size=32M]
+	I/O ports at 3000 [disabled] [size=128]
+	Expansion ROM at a3000000 [disabled] [size=512K]
+	Capabilities: <access denied>
+	Kernel driver in use: vfio-pci
+	Kernel modules: nvidiafb, nouveau
+
+01:00.1 Audio device [0403]: NVIDIA Corporation GP106 High Definition Audio Controller [10de:10f1] (rev a1)
+	Subsystem: eVga.com. Corp. GP106 High Definition Audio Controller [3842:6163]
+	Flags: bus master, fast devsel, latency 0, IRQ 10
+	Memory at a3080000 (32-bit, non-prefetchable) [size=16K]
+	Capabilities: <access denied>
+	Kernel driver in use: vfio-pci
+	Kernel modules: snd_hda_intel
 ```
 
-Since I am on intel & [Pop!OS](https://system76.com/pop), I used `kernelstub -a "iommu=pt intel_iommu=on vfio-pci.ids=10de:1c03,10de:10f1"`.
+The good part is `Kernel driver in use: vfio-pci`.
+
 
 #### attach card to QEMU
 
@@ -139,8 +162,8 @@ run([
   '-device', 'ide-hd,bus=sata.4,drive=SYSTEM',
   '-vga', 'none',
   '-device', 'pcie-root-port,bus=pcie.0,multifunction=on,port=1,chassis=1,id=port.1',
-  '-device', 'vfio-pci,host=01:00.0,bus=port.1,multifunction=on,romfile=%s' % ROM_VIDEO,
-  '-device', 'vfio-pci,host=01:00.1,bus=port.1'
+  '-device', 'vfio-pci,host=01:00.0,multifunction=on,romfile=%s' % ROM_VIDEO,
+  '-device', 'vfio-pci,host=01:00.1'
 ])
 ```
 

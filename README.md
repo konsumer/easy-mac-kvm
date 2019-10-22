@@ -6,6 +6,12 @@ To use it, you will need python & qemu installed, and kvm only works on a Linux 
 
 If you want to see the current setup I am using, you can checkout the [mysetup branch](https://github.com/konsumer/easy-mac-kvm/tree/mysetup). It's very hardware-specific, though, so YMMV.
 
+If you haven't already, install qemu:
+
+```bash
+sudo apt install qemu-system
+```
+
 ```bash
 # get the files
 git clone --depth=1 https://github.com/konsumer/easy-mac-kvm.git mymac
