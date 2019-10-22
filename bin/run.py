@@ -41,6 +41,6 @@ run([
   '-device', 'ide-hd,bus=sata.2,drive=ESP',
   '-drive', 'id=SYSTEM,format=qcow2,if=none,file=%s' % DISK_SYSTEM,
   '-device', 'ide-hd,bus=sata.4,drive=SYSTEM',
-  '-device', 'vfio-pci,host=01:00.0,multifunction=on,romfile=%s' % ROM_VIDEO,
-  '-device', 'vfio-pci,host=01:00.1'
+  # '-device', 'vfio-pci,host=01:00.0,multifunction=on,romfile=%s' % ROM_VIDEO,
+  # '-device', 'vfio-pci,host=01:00.1'
 ])
